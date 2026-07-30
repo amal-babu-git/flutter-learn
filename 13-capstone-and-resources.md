@@ -23,7 +23,7 @@ Build this and you will have exercised every concept in this tutorial. Scope it 
 
 ### Engineering bar
 
-- Feature-first structure, MVVM, repository interfaces in `domain/`, implementations in `data/`
+- Flutter's [official package structure](03-project-setup.md#35-folder-structure-the-official-layout), MVVM, abstract repositories with `_remote` and `_dev` implementations
 - Riverpod for state + DI; `freezed` for every model; `Result<T>` at every repository boundary
 - Drift for local persistence with a tested migration
 - ≥70% coverage on view models and repositories; widget tests for every screen's four states; 3 integration tests

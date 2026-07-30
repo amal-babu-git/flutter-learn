@@ -9,7 +9,7 @@
 `go_router` is maintained by the Flutter team and is the right default: URL-based, declarative, deep-link-capable, and web-friendly. It sits on Navigator 2.0 so you never have to touch that API directly.
 
 ```dart
-// core/router/app_router.dart
+// lib/routing/router.dart
 final router = GoRouter(
   initialLocation: '/orders',
   debugLogDiagnostics: true,

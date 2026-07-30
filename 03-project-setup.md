@@ -1,6 +1,6 @@
 # Part 3 — Project Setup and Tooling
 
-[← Flutter Fundamentals](02-flutter-fundamentals.md) · [Index](README.md) · [Next: Architecture →](04-architecture.md)
+[← Flutter Fundamentals](02-flutter-fundamentals.md) · [Index](README.md) · [Next: Structure at Scale →](03b-project-structure-at-scale.md)
 
 ---
 
@@ -193,7 +193,7 @@ Pin ranges with `^` and commit `pubspec.lock` for apps (not for packages). Check
 
 ---
 
-## 3.5 Folder structure — the official layout
+## 3.5 Folder structure: the official layout
 
 Flutter has an **officially documented package structure**, published in the [architecture case study](https://docs.flutter.dev/app-architecture/case-study#package-structure) and implemented in [`compass_app`](https://github.com/flutter/samples/tree/main/compass_app), the team's reference application. This tutorial uses it. Every file-path comment in the code examples that follow matches this tree.
 
@@ -362,7 +362,7 @@ You need at minimum `dev`, `staging`, `prod` pointing at different API base URLs
 **Dart side — compile-time constants:**
 
 ```dart
-// lib/core/config/app_config.dart
+// lib/config/app_config.dart
 enum Flavor { dev, staging, prod }
 
 final class AppConfig {
@@ -437,4 +437,4 @@ android {
 
 ---
 
-[← Flutter Fundamentals](02-flutter-fundamentals.md) · [Index](README.md) · [Next: Architecture →](04-architecture.md)
+[← Flutter Fundamentals](02-flutter-fundamentals.md) · [Index](README.md) · [Next: Structure at Scale →](03b-project-structure-at-scale.md)

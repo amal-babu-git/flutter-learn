@@ -40,7 +40,7 @@ void main() {
 // 1. A plain dependency (DI). Cached, disposed with the scope.
 @riverpod
 OrdersRepository ordersRepository(Ref ref) =>
-    OrdersRepositoryImpl(ref.watch(ordersApiProvider), ref.watch(appDatabaseProvider));
+    OrdersRepositoryRemote(ref.watch(ordersApiClientProvider), ref.watch(appDatabaseProvider));
 
 // 2. Derived/computed state — recomputes when a watched provider changes.
 @riverpod

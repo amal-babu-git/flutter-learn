@@ -27,7 +27,7 @@ The architecture in [Part 4](04-architecture.md) is what makes this achievable â
 ## 10.2 Unit tests
 
 ```dart
-// test/features/orders/orders_view_model_test.dart
+// test/ui/orders/orders_viewmodel_test.dart   (test/ mirrors lib/)
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

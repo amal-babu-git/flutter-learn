@@ -9,7 +9,7 @@ This is where your backend experience pays off most, and where the mobile-specif
 ## 6.1 Dio client setup
 
 ```dart
-// core/network/dio_client.dart
+// lib/data/services/api/api_client.dart
 import 'package:dio/dio.dart';
 
 Dio buildDio({
@@ -63,7 +63,7 @@ Log that id on both client and FastAPI side and you can join a mobile crash to a
 **Never** put tokens in `SharedPreferences` — that's plaintext XML on Android and a plist on iOS. Use `flutter_secure_storage`, which wraps the Android Keystore/EncryptedSharedPreferences and the iOS Keychain.
 
 ```dart
-// core/storage/secure_store.dart
+// lib/data/services/secure_storage_service.dart
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final class SecureStore {
@@ -105,7 +105,7 @@ This is the piece everyone gets subtly wrong. The naive version fires N refresh 
 The correct pattern is **single-flight refresh with a request queue**:
 
 ```dart
-// core/network/auth_interceptor.dart
+// lib/data/services/api/auth_interceptor.dart
 import 'dart:async';
 import 'package:dio/dio.dart';
 
@@ -233,7 +233,7 @@ class AuthInterceptor extends Interceptor {
 Dart has no runtime reflection in AOT, so JSON mapping is **code-generated**, not reflective. This is `pydantic` with a build step instead of runtime introspection — more verbose to set up, zero runtime cost.
 
 ```dart
-// features/orders/data/dto/order_dto.dart
+// lib/data/model/order/order_dto.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'order_dto.freezed.dart';
@@ -310,10 +310,11 @@ Worth it above roughly a few hundred KB. Below that the isolate handoff cost dom
 The repository is where the interesting decisions live: caching policy, offline behaviour, and the DTO→domain mapping.
 
 ```dart
-final class OrdersRepositoryImpl implements OrdersRepository {
-  OrdersRepositoryImpl(this._api, this._db, this._connectivity);
+// lib/data/repositories/orders/orders_repository_remote.dart
+final class OrdersRepositoryRemote implements OrdersRepository {
+  OrdersRepositoryRemote(this._api, this._db, this._connectivity);
 
-  final OrdersApi _api;
+  final OrdersApiClient _api;
   final AppDatabase _db;
   final Connectivity _connectivity;
 

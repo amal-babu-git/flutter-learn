@@ -36,7 +36,7 @@ Rules: never store tokens, PII, or anything a competitor would enjoy reading. Wr
 You think in SQL and Postgres. **Drift** is the right choice: a typed SQLite layer for Dart with compile-time-checked queries, migrations, and reactive streams. It is the closest thing Flutter has to SQLAlchemy + Alembic.
 
 ```dart
-// core/storage/app_database.dart
+// lib/data/services/local/app_database.dart
 import 'package:drift/drift.dart';
 
 part 'app_database.g.dart';

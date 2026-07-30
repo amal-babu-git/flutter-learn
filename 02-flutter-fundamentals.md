@@ -301,7 +301,7 @@ If you're wondering "do I need a key here?", the answer is: only if state is bei
 Define your design system once, consume via `Theme.of(context)`. Never hardcode colors in widgets — same discipline as CSS custom properties or a Tailwind theme.
 
 ```dart
-// lib/core/theme/app_theme.dart
+// lib/ui/core/themes/app_theme.dart
 abstract final class AppTheme {
   static ThemeData light() => _base(Brightness.light);
   static ThemeData dark() => _base(Brightness.dark);

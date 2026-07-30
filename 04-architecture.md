@@ -1,6 +1,6 @@
 # Part 4 — Architecture
 
-[← Project Setup](03-project-setup.md) · [Index](README.md) · [Next: State Management →](05-state-management.md)
+[← Structure at Scale](03b-project-structure-at-scale.md) · [Index](README.md) · [Next: State Management →](05-state-management.md)
 
 ---
 
@@ -63,17 +63,17 @@ The important architectural claim, and the one you already believe: **the reposi
 - One per domain concept (`OrderRepository`, `InventoryRepository`), not one per screen.
 - Owns caching, offline/online merge, retry policy, and the mapping from DTO to domain model.
 - Returns domain models (and `Result<T>`), never raw HTTP responses or DTOs.
-- Declared as an `abstract interface class` in `domain/`, implemented in `data/`. This is what makes view-model tests trivially fakeable.
+- Declared as an `abstract interface class`, with concrete implementations per environment side by side in `data/repositories/<entity>/` (`_remote`, `_local`, `_dev`). Flutter rates abstract repositories *strongly recommend* — it's what lets you run the whole app against fakes without touching a network, and what makes view-model tests trivially fakeable.
 
 **Service — raw I/O, stateless.**
-- One per external data source: `AuthApi`, `OrdersApi`, `AppDatabase`, `LocationService`.
+- One per external data source: `AuthApiClient`, `OrdersApiClient`, `AppDatabase`, `SecureStorageService`.
 - Wraps a single API/plugin. Knows nothing about your domain.
 - No caching, no business rules, no state.
 
 A concrete slice, top to bottom:
 
 ```dart
-// features/orders/domain/order.dart
+// lib/domain/models/order.dart
 @freezed
 sealed class Order with _$Order {
   const factory Order({
@@ -85,7 +85,7 @@ sealed class Order with _$Order {
   }) = _Order;
 }
 
-// features/orders/domain/orders_repository.dart  (the INTERFACE)
+// lib/data/repositories/orders/orders_repository.dart  (the INTERFACE)
 abstract interface class OrdersRepository {
   Future<Result<Paginated<Order>>> list({int page, OrderStatus? status});
   Future<Result<Order>> byId(String id);
@@ -94,9 +94,9 @@ abstract interface class OrdersRepository {
 ```
 
 ```dart
-// features/orders/data/orders_api.dart  (SERVICE — raw I/O)
-final class OrdersApi {
-  const OrdersApi(this._dio);
+// lib/data/services/api/orders_api_client.dart  (SERVICE — raw I/O)
+final class OrdersApiClient {
+  const OrdersApiClient(this._dio);
   final Dio _dio;
 
   Future<Response<Map<String, dynamic>>> list({
@@ -113,11 +113,11 @@ final class OrdersApi {
 ```
 
 ```dart
-// features/orders/data/orders_repository_impl.dart  (REPOSITORY)
-final class OrdersRepositoryImpl implements OrdersRepository {
-  OrdersRepositoryImpl(this._api, this._db);
+// lib/data/repositories/orders/orders_repository_remote.dart  (REPOSITORY)
+final class OrdersRepositoryRemote implements OrdersRepository {
+  OrdersRepositoryRemote(this._api, this._db);
 
-  final OrdersApi _api;
+  final OrdersApiClient _api;
   final AppDatabase _db;
 
   @override
@@ -145,7 +145,7 @@ final class OrdersRepositoryImpl implements OrdersRepository {
 ```
 
 ```dart
-// features/orders/presentation/orders_view_model.dart  (VIEWMODEL)
+// lib/ui/orders/view_models/orders_viewmodel.dart  (VIEWMODEL)
 @riverpod
 class OrdersViewModel extends _$OrdersViewModel {
   @override
@@ -171,7 +171,7 @@ class OrdersViewModel extends _$OrdersViewModel {
 ```
 
 ```dart
-// features/orders/presentation/orders_screen.dart  (VIEW)
+// lib/ui/orders/widgets/orders_screen.dart  (VIEW)
 class OrdersScreen extends ConsumerWidget {
   const OrdersScreen({super.key});
 
@@ -269,7 +269,7 @@ Two viable approaches.
 If you're using Riverpod for state anyway, providers *are* the container. Overriding them in tests is first-class.
 
 ```dart
-// core/network/providers.dart
+// lib/config/dependencies.dart
 @riverpod
 Dio dio(Ref ref) {
   final config = ref.watch(appConfigProvider);
@@ -287,11 +287,13 @@ Dio dio(Ref ref) {
 }
 
 @riverpod
-OrdersApi ordersApi(Ref ref) => OrdersApi(ref.watch(dioProvider));
+OrdersApiClient ordersApiClient(Ref ref) => OrdersApiClient(ref.watch(dioProvider));
 
 @riverpod
-OrdersRepository ordersRepository(Ref ref) =>
-    OrdersRepositoryImpl(ref.watch(ordersApiProvider), ref.watch(appDatabaseProvider));
+OrdersRepository ordersRepository(Ref ref) => OrdersRepositoryRemote(
+      ref.watch(ordersApiClientProvider),
+      ref.watch(appDatabaseProvider),
+    );
 ```
 
 In a test:
@@ -318,7 +320,7 @@ A classic service locator, closer to a Spring/FastAPI `Depends` container. Works
 Every mutating action has the same four states: idle, running, succeeded, failed. Writing `_isLoading`/`_error` pairs by hand in every view model is the boilerplate that makes people hate MVVM. Flutter's official design-patterns docs recommend a `Command` class. It's ~40 lines and pays for itself immediately.
 
 ```dart
-// core/command.dart
+// lib/utils/command.dart
 import 'package:flutter/foundation.dart';
 
 class Command<T> extends ChangeNotifier {
@@ -387,4 +389,4 @@ You get: disabled-while-running, no double submissions, uniform error surface, a
 
 ---
 
-[← Project Setup](03-project-setup.md) · [Index](README.md) · [Next: State Management →](05-state-management.md)
+[← Structure at Scale](03b-project-structure-at-scale.md) · [Index](README.md) · [Next: State Management →](05-state-management.md)

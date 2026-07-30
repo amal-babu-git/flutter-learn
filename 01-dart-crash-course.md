@@ -549,7 +549,7 @@ try {
 **The recommended pattern** (this is in Flutter's official design-patterns docs) is to make failure explicit in the return type using a sealed `Result`:
 
 ```dart
-// lib/core/result.dart
+// lib/utils/result.dart
 sealed class Result<T> {
   const Result();
 

@@ -25,7 +25,8 @@ This tutorial assumes:
 | 0 | **[Orientation](00-orientation.md)** | Why Flutter honestly · React/Next.js → Flutter mental model map · what changed in 3.44 |
 | 1 | **[Dart Crash Course](01-dart-crash-course.md)** | Null safety · records · patterns · sealed classes · async & isolates · the `Result` type |
 | 2 | **[Flutter Fundamentals](02-flutter-fundamentals.md)** | Widget/Element/RenderObject · State lifecycle · BuildContext · the constraint algorithm · keys · theming |
-| 3 | **[Project Setup & Tooling](03-project-setup.md)** | Strict `analysis_options` · dependency baseline · feature-first folder structure · flavors |
+| 3 | **[Project Setup & Tooling](03-project-setup.md)** | Strict `analysis_options` · dependency baseline · **Flutter's official folder structure** · flavors |
+| 3b | **[Project Structure at Scale](03b-project-structure-at-scale.md)** | Pub workspaces · feature packages · Melos · boundary enforcement for many-module apps |
 | 4 | **[Architecture](04-architecture.md)** | Official MVVM + repository · layer contracts · **mapping your FastAPI backend** · DI · the Command pattern |
 | 5 | **[State Management](05-state-management.md)** | The ladder of state · Riverpod 3 in depth · Bloc and when to prefer it |
 | 6 | **[Networking, Auth & Data](06-networking-auth-data.md)** | Dio setup · secure token storage · **single-flight JWT refresh** · freezed DTOs · error taxonomy · pagination |
@@ -43,7 +44,7 @@ This tutorial assumes:
 
 **Don't skip [Part 1](01-dart-crash-course.md).** Dart's records, patterns, and sealed classes have no direct TypeScript equivalent, and they're what make Flutter's error handling and state modelling pleasant. There are four DartPad exercises at the end — if those feel comfortable, your Dart is sufficient for everything else here.
 
-**[Parts 2](02-flutter-fundamentals.md)–[3](03-project-setup.md)** are foundations.
+**[Parts 2](02-flutter-fundamentals.md)–[3b](03b-project-structure-at-scale.md)** are foundations — [3b](03b-project-structure-at-scale.md) is skippable until you actually have many modules.
 **[Parts 4](04-architecture.md)–[8](08-persistence-offline.md)** are the production shape — this is where your existing architecture instincts transfer almost one-to-one.
 **[Parts 9](09-forms-and-ui.md)–[12](12-shipping.md)** are the ship-it layer.
 **[Part 13](13-capstone-and-resources.md)** has a capstone that mirrors ERP work, plus an 8-week schedule.
@@ -73,5 +74,8 @@ Written for Flutter 3.44 / Dart 3.12 (May 2026). Notable recent changes reflecte
 - Swift Package Manager default on iOS/macOS
 - Riverpod 3 (`StateNotifierProvider` and friends are now legacy)
 - Flutter's official app-architecture guide (post-2024) — the biggest change in how the team recommends structuring apps
+- Pub workspaces (Dart 3.6+) as the native monorepo mechanism, with Melos layered on top
+
+Structure and naming throughout follow Flutter's [official package structure](https://docs.flutter.dev/app-architecture/case-study#package-structure) and [architecture recommendations](https://docs.flutter.dev/app-architecture/recommendations), as implemented in [`compass_app`](https://github.com/flutter/samples/tree/main/compass_app).
 
 Verify version-specific details against [the official docs](https://docs.flutter.dev), which move fast.
